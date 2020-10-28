@@ -7,7 +7,6 @@
 // except according to those terms.
 
 // STD Dependencies -----------------------------------------------------------
-use rand::Rng;
 use std::fs::File;
 use std::io::Read;
 
@@ -193,7 +192,7 @@ pub fn parse_form_data(body: &[u8], boundary: Option<String>) -> Result<HttpForm
                         &body[previous_index + boundary.len() + 2..i - 2]
                     );
 
-                    try!(parse_form_data_part(&mut fields, part));
+                    parse_form_data_part(&mut fields, part)?;
 
                 }
 
@@ -318,7 +317,7 @@ fn parse_form_data_part(fields: &mut Vec<HttpFormDataField>, data: Vec<u8>) -> R
             // Parse field metadata
             let headers = Headers::from_raw(req.headers).unwrap();
 
-            let mut part = try!(ParsedFormDataField::from_headers(headers));
+            let mut part = ParsedFormDataField::from_headers(headers)?;
 
             // File fields
             if part.filename.is_some() {

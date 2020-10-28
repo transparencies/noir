@@ -468,7 +468,7 @@ fn json_type(value: &JsonValue) -> JsonType {
 mod tests {
 
     use super::compare;
-    use json::JsonValue;
+    use json::{object, JsonValue, array};
 
     fn uncolor(mut text: String) -> String {
         text = text.replace("\u{1b}", "");

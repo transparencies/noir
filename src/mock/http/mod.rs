@@ -165,7 +165,7 @@ impl Read for MockStream {
                 Ok(bytes_read)
 
             },
-            Err(err) => Err(Error::new(err.kind(), err.description()))
+            Err(err) => Err(Error::new(err.kind(), err.to_string()))
         }
     }
 }

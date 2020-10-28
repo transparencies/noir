@@ -19,9 +19,9 @@ use mock::{MockRequest, MockResponse};
 // Global Mocked Response Provider --------------------------------------------
 pub struct ResponseProvider {
     response_index: usize,
-    provided_responses: Vec<(Box<MockResponse + 'static>, usize, usize)>,
+    provided_responses: Vec<(Box<dyn MockResponse + 'static>, usize, usize)>,
     request_index: usize,
-    additional_requests: Vec<Box<MockRequest>>
+    additional_requests: Vec<Box<dyn MockRequest>>
 }
 
 impl ResponseProvider {
@@ -38,7 +38,7 @@ impl ResponseProvider {
         };
     }
 
-    pub fn provide(resources: Vec<Box<MockResponse + 'static>>) {
+    pub fn provide(resources: Vec<Box<dyn MockResponse + 'static>>) {
         let handler = PROVIDER_INSTANCE.clone();
         match handler.lock() {
             Ok(handler) => {
@@ -54,7 +54,7 @@ impl ResponseProvider {
     }
 
     #[cfg_attr(feature = "clippy", allow(needless_return))]
-    pub fn provided_responses() -> Vec<(Box<MockResponse + 'static>, usize, usize)> {
+    pub fn provided_responses() -> Vec<(Box<dyn MockResponse + 'static>, usize, usize)> {
         let handler = PROVIDER_INSTANCE.clone();
         return match handler.lock() {
             Ok(handler) => {
@@ -66,7 +66,7 @@ impl ResponseProvider {
     }
 
     #[cfg_attr(feature = "clippy", allow(needless_return))]
-    pub fn additional_requests() -> Vec<Box<MockRequest + 'static>> {
+    pub fn additional_requests() -> Vec<Box<dyn MockRequest + 'static>> {
         let handler = PROVIDER_INSTANCE.clone();
         return match handler.lock() {
             Ok(handler) => {
@@ -79,7 +79,7 @@ impl ResponseProvider {
 
     #[cfg_attr(feature = "clippy", allow(needless_return))]
     pub fn request(
-        request: Box<MockRequest>
+        request: Box<dyn MockRequest>
 
     ) -> Result<Result<Vec<u8>, Error>, Error> {
 

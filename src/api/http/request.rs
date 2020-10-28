@@ -100,8 +100,8 @@ pub struct HttpRequest<A: HttpApi> {
     api_timed_out: bool,
     dump_response: bool,
 
-    provided_responses: Vec<Box<MockResponse + 'static>>,
-    provided_mocks: Vec<Box<MockProvider + 'static>>,
+    provided_responses: Vec<Box<dyn MockResponse + 'static>>,
+    provided_mocks: Vec<Box<dyn MockProvider + 'static>>,
 
     request_headers: Headers,
     request_body: Option<HttpBody>,
@@ -290,7 +290,7 @@ impl<A: HttpApi> HttpRequest<A> {
     ///
     /// If one or more of the provided responses is not called or does not
     /// match its expectations.
-    pub fn provide(mut self, mut resources: Vec<Box<MockResponse>>) -> Self {
+    pub fn provide(mut self, mut resources: Vec<Box<dyn MockResponse>>) -> Self {
         self.provided_responses.append(&mut resources);
         self
     }

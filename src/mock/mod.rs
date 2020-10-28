@@ -38,12 +38,12 @@ pub trait MockResponse: Send {
     ///
     /// Responses which should only match a single request need to always return
     /// `false` once `MockResponse::respond()` was called.
-    fn matches(&self, &Box<MockRequest>) -> bool;
+    fn matches(&self, &Box<dyn MockRequest>) -> bool;
 
     /// Called when the implementation of `MockResponse::matches` return `true`.
     ///
     /// Should return a `Result` with either the response body or a `std::io::Error`.
-    fn respond(&mut self, Box<MockRequest>) -> MockRequestResponse;
+    fn respond(&mut self, Box<dyn MockRequest>) -> MockRequestResponse;
 
     /// If the response has a matching `MockRequest`, compare the two and return
     /// a vector of error messages listing any differences.
@@ -74,7 +74,7 @@ pub trait MockRequest: Send + Any {
     /// concrete types.
     #[cfg_attr(feature = "clippy", allow(needless_lifetimes))]
     fn downcast_ref<'a>(
-        request: &'a Box<MockRequest>
+        request: &'a Box<dyn MockRequest>
 
     ) -> Option<&'a Self> where Self: Any + Send + Sized + 'static {
         request.as_any().downcast_ref::<Self>()
@@ -83,7 +83,7 @@ pub trait MockRequest: Send + Any {
     /// Mutable version of `MockRequest::downcast_ref`.
     #[cfg_attr(feature = "clippy", allow(needless_lifetimes))]
     fn downcast_mut<'a>(
-        request: &'a mut Box<MockRequest>
+        request: &'a mut Box<dyn MockRequest>
 
     ) -> Option<&'a mut Self> where Self: Any + Send + Sized + 'static {
         request.as_any_mut().downcast_mut::<Self>()
@@ -106,7 +106,7 @@ pub trait MockRequest: Send + Any {
     /// }
     /// # }
     /// ```
-    fn as_any(&self) -> &Any;
+    fn as_any(&self) -> &dyn Any;
 
     /// Method for casting the concrete implementation of `MockRequest` into a
     /// `&mut Any` for use with `MockRequest::downcast_mut()`.
@@ -125,7 +125,7 @@ pub trait MockRequest: Send + Any {
     /// }
     /// # }
     /// ```
-    fn as_any_mut(&mut self) -> &mut Any;
+    fn as_any_mut(&mut self) -> &mut dyn Any;
 
 }
 
@@ -164,7 +164,7 @@ impl MockResponseProvider {
     ///
     /// When no matching response for the `request` exists.
     pub fn response_from_request(
-        request: Box<MockRequest>
+        request: Box<dyn MockRequest>
 
     ) -> Result<MockRequestResponse, Error> where Self: Sized {
         ResponseProvider::request(request)

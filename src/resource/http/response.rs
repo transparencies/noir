@@ -47,7 +47,7 @@ pub struct HttpResponse<E: HttpEndpoint> {
     expected_body: Option<HttpBody>,
     compare_exact: bool,
 
-    request: Option<Box<MockRequest>>
+    request: Option<Box<dyn MockRequest>>
 }
 
 impl<E: HttpEndpoint> HttpResponse<E> {

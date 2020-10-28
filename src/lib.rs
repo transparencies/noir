@@ -19,7 +19,6 @@
 
 // Crates ---------------------------------------------------------------------
 extern crate url;
-#[macro_use]
 extern crate json;
 extern crate rand;
 extern crate hyper;
